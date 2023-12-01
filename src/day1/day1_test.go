@@ -27,9 +27,9 @@ func Test_SolutionPart2(t *testing.T) {
 }
 
 func Test_convertWordNumbers(t *testing.T) {
-	input := "eightwothree"
+	input := "9fgsixzkbscvbxdsfive6spjfhzxbzvgbvrthreeoneightn"
 	output := convertWordNumbers(input)
-	assert.Equal(t, output, "8wo3")
+	assert.Equal(t, output, "9fg6zkbscvbxds56spjfhzxbzvgbvr318n")
 }
 
 func Test_generateWordNumberTree(t *testing.T) {

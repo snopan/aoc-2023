@@ -26,6 +26,7 @@ func SolutionPart2(input string) int {
 		convertedLine := convertWordNumbers(line)
 		calibration := calibrate(convertedLine)
 		total += calibration
+		fmt.Printf("%d\n", calibration)
 	}
 
 	return total
@@ -50,47 +51,74 @@ func calibrate(data string) int {
 	return front*10 + back
 }
 
+// A bit cursed
 func convertWordNumbers(data string) string {
 	wordNumberTree := generateWordNumberTree()
-	curr := wordNumberTree
 
+	var checkingTree *node
+	var ok bool
+	var checkingStartIndex int
+	tempStartLetter := false
 	parsed := ""
 	checking := ""
-	var ok bool
-	for _, s := range data {
-		letter := string(s)
+	for i := 0; i < len(data); i++ {
+		letter := string(data[i])
 
-		// Check if this letter continues on this number word
-		curr, ok = curr.children[letter]
-		if !ok {
+		// If we're not checking any word at the moment, see if this
+		// letter is the start of a word
+		if checking == "" {
+			checkingTree, ok = wordNumberTree.children[letter]
 
-			// When it doesn't the add all the previouis checking to parsed and reset
-			curr = wordNumberTree
-			parsed += checking
-			checking = ""
-
-			// While this letter is not valid for the current checking number
-			// it may be a start of a different number so check again
-			// if it's not then it's safe to add this letter to parsed
-			curr, ok = curr.children[letter]
-			if !ok {
-				curr = wordNumberTree
-				parsed += letter
-			} else {
+			// If it is then mark where we started and add this letter to current checking
+			if ok {
+				checkingStartIndex = i
 				checking += letter
-			}
-		} else {
-			checking += letter
-		}
 
-		if curr.validValue() {
-			parsed += fmt.Sprintf("%d", curr.value)
-			curr = wordNumberTree
-			checking = ""
+				// If it's not a valid start then add this letter to parsed
+			} else {
+				parsed += letter
+			}
+
+			// If we are checking then see if this continues the word
+		} else {
+			checkingTree, ok = checkingTree.children[letter]
+
+			// If it continues add this letter to current checking
+			if ok {
+				checking += letter
+
+				// The letter is at the end of the word so add the value and reset
+				if checkingTree.validValue() {
+					parsed += fmt.Sprintf("%d", checkingTree.value)
+					checking = ""
+
+					// This last letter for the word may also be teh start of another word
+					checkingTree, ok = wordNumberTree.children[letter]
+					if ok {
+						checkingStartIndex = i
+						checking += letter
+						tempStartLetter = true
+					}
+				}
+
+				// If it's not a valid word at the end then add the start letter of
+				// this word to parsed and move index back to one after the start
+			} else {
+
+				// If the start letter used is the end of a previous word,
+				// we don't need to at that start letter back in
+				if !tempStartLetter {
+					startLetter := string(data[checkingStartIndex])
+					parsed += startLetter
+				}
+
+				tempStartLetter = false
+				checking = ""
+				i = checkingStartIndex
+			}
 		}
 	}
 	parsed += checking
-
 	return parsed
 }
 
