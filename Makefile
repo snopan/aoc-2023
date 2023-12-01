@@ -1,3 +1,3 @@
 .PHONY: run
 run: 
-	go run ./cmd/day$(DAY).go ./output/day$(DAY) < ./input/day$(DAY)
+	go run ./src/cmd $(DAY) $(PART) < ./input/day$(DAY)_part$(PART)
