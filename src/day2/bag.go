@@ -1,6 +1,6 @@
 package day2
 
-type bag struct {
+type Bag struct {
 	red   int
 	green int
 	blue  int
@@ -8,7 +8,7 @@ type bag struct {
 
 // This function returns whether the provided bag's contents
 // can fit into this current bag
-func (b *bag) canFitBag(otherBag *bag) bool {
+func (b *Bag) canFitBag(otherBag *Bag) bool {
 	if b.red < otherBag.red {
 		return false
 	}
@@ -23,7 +23,7 @@ func (b *bag) canFitBag(otherBag *bag) bool {
 
 // Find the maxmimum for each marble in the current and provided bag
 // then update current bag with that
-func (b *bag) updateMaximum(otherBag *bag) {
+func (b *Bag) updateMaximum(otherBag *Bag) {
 	b.red = max(b.red, otherBag.red)
 	b.green = max(b.green, otherBag.green)
 	b.blue = max(b.blue, otherBag.blue)

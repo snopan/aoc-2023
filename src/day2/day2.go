@@ -48,7 +48,7 @@ func SolutionPart2(input string) int {
 
 		gameInfo := strings.Split(game, ":")
 
-		var minimumBag *bag
+		var minimumBag *Bag
 		rounds := strings.Split(gameInfo[1], ";")
 		for _, round := range rounds {
 			roundBag := parseBag(round)
@@ -80,8 +80,8 @@ func getGameID(data string) int {
 	return gameID
 }
 
-func parseBag(data string) *bag {
-	bag := &bag{}
+func parseBag(data string) *Bag {
+	bag := &Bag{}
 
 	if len(data) == 0 {
 		return bag
