@@ -54,7 +54,7 @@ func calibrate(data string) int {
 func convertWordNumbers(data string) string {
 	wordNumberTree := generateWordNumberTree()
 
-	var checkingTree *node
+	var checkingTree *Node
 	var ok bool
 	var checkingStartIndex int
 	tempStartLetter := false
@@ -121,10 +121,10 @@ func convertWordNumbers(data string) string {
 	return parsed
 }
 
-func generateWordNumberTree() *node {
-	root := &node{
+func generateWordNumberTree() *Node {
+	root := &Node{
 		value:    -1,
-		children: map[string]*node{},
+		children: map[string]*Node{},
 	}
 	addWordNumberNodes(root, "one", 1)
 	addWordNumberNodes(root, "two", 2)
@@ -138,7 +138,7 @@ func generateWordNumberTree() *node {
 	return root
 }
 
-func addWordNumberNodes(root *node, word string, number int) {
+func addWordNumberNodes(root *Node, word string, number int) {
 	curr := root
 	value := -1
 	for i, letter := range word {

@@ -1,22 +1,22 @@
 package day1
 
-type node struct {
+type Node struct {
 	value    int
-	children map[string]*node
+	children map[string]*Node
 }
 
-func (n *node) addNode(letter string, value int) *node {
+func (n *Node) addNode(letter string, value int) *Node {
 	child, ok := n.children[letter]
 	if !ok {
-		child = &node{
+		child = &Node{
 			value:    value,
-			children: map[string]*node{},
+			children: map[string]*Node{},
 		}
 		n.children[letter] = child
 	}
 	return child
 }
 
-func (n *node) validValue() bool {
+func (n *Node) validValue() bool {
 	return n.value != -1
 }
