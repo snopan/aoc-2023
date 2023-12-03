@@ -26,7 +26,6 @@ func SolutionPart2(input string) int {
 		convertedLine := convertWordNumbers(line)
 		calibration := calibrate(convertedLine)
 		total += calibration
-		fmt.Printf("%d\n", calibration)
 	}
 
 	return total
