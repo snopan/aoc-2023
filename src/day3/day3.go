@@ -7,11 +7,62 @@ import (
 )
 
 func SolutionPart1(input string) int {
+	numberGrid, symbolPoints := buildNumberGridAndSymbolPoints(input)
+
+	// loop through symbols and find part numbers and add it to total
+	total := 0
+	for _, point := range symbolPoints {
+		adjacentPoints := point.getAdjacentPoints()
+		for _, ap := range adjacentPoints {
+			number, ok := numberGrid.getPoint(ap.x, ap.y)
+			if ok {
+				total += number
+
+				// Once number is used we can remove it
+				numberGrid.removeNumber(ap.x, ap.y, number)
+			}
+		}
+	}
+
+	return total
+}
+
+func SolutionPart2(input string) int {
+	numberGrid, symbolPoints := buildNumberGridAndSymbolPoints(input)
+
+	// loop through symbols and only when we find exactly two part numbers, then add it to total
+	total := 0
+	for _, point := range symbolPoints {
+		gearRatio := 1
+		numParts := 0
+		adjacentPoints := point.getAdjacentPoints()
+		for _, ap := range adjacentPoints {
+			number, ok := numberGrid.getPoint(ap.x, ap.y)
+			if ok {
+				numParts++
+				gearRatio *= number
+
+				// Once number is used we can remove it
+				numberGrid.removeNumber(ap.x, ap.y, number)
+			}
+		}
+
+		if numParts == 2 {
+			total += gearRatio
+		} else {
+			numberGrid.undoRecentRemovals()
+		}
+	}
+
+	return total
+}
+
+func buildNumberGridAndSymbolPoints(data string) (*Grid, []*Point) {
 	numberGrid := newGrid()
 	symbolPoints := []*Point{}
 
 	// Build number grid and symbol points
-	rows := strings.Split(input, "\n")
+	rows := strings.Split(data, "\n")
 	for x, row := range rows {
 
 		digits := []int{}
@@ -50,22 +101,7 @@ func SolutionPart1(input string) int {
 		}
 	}
 
-	// loop through symbols and find part numbers and add it to total
-	total := 0
-	for _, point := range symbolPoints {
-		adjacentPoints := point.getAdjacentPoints()
-		for _, ap := range adjacentPoints {
-			number, ok := numberGrid.getPoint(ap.x, ap.y)
-			if ok {
-				total += number
-
-				// Once number is used we can remove it
-				numberGrid.removeNumber(ap.x, ap.y, number)
-			}
-		}
-	}
-
-	return total
+	return numberGrid, symbolPoints
 }
 
 func digitsToNumber(digits []int) int {

@@ -39,6 +39,8 @@ func main() {
 		switch part {
 		case "1":
 			solution = day3.SolutionPart1(input)
+		case "2":
+			solution = day3.SolutionPart2(input)
 		}
 	}
 
