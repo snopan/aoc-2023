@@ -1,11 +1,10 @@
 package day4
 
 import (
-	"fmt"
 	"math"
-	"regexp"
-	"strconv"
 	"strings"
+
+	"github.com/snopan/aoc-2023/src/helpers"
 )
 
 func SolutionPart1(input string) int {
@@ -23,9 +22,9 @@ func SolutionPart1(input string) int {
 		winningNumbersStr := cards[0]
 		ownNumbersStr := cards[1]
 
-		winningNumbers := parseCardNumbers(winningNumbersStr)
+		winningNumbers := helpers.GetNumbersFromText(winningNumbersStr)
 		winningNumbersMap := numberArrToMap(winningNumbers)
-		ownNumbers := parseCardNumbers(ownNumbersStr)
+		ownNumbers := helpers.GetNumbersFromText(ownNumbersStr)
 
 		numMatches := numberMatches(winningNumbersMap, ownNumbers)
 		total += calculateScore(numMatches)
@@ -50,9 +49,9 @@ func SolutionPart2(input string) int {
 		winningNumbersStr := cards[0]
 		ownNumbersStr := cards[1]
 
-		winningNumbers := parseCardNumbers(winningNumbersStr)
+		winningNumbers := helpers.GetNumbersFromText(winningNumbersStr)
 		winningNumbersMap := numberArrToMap(winningNumbers)
-		ownNumbers := parseCardNumbers(ownNumbersStr)
+		ownNumbers := helpers.GetNumbersFromText(ownNumbersStr)
 
 		numMatches := numberMatches(winningNumbersMap, ownNumbers)
 		currCopies := 1
@@ -95,22 +94,6 @@ func calculateScore(numMatches int) int {
 	} else {
 		return numMatches
 	}
-}
-
-func parseCardNumbers(cardNumbers string) []int {
-	re := regexp.MustCompile(`\d+`)
-	numberTexts := re.FindAllStringSubmatch(cardNumbers, -1)
-
-	numbers := []int{}
-	for _, n := range numberTexts {
-		number, err := strconv.Atoi(n[0])
-		if err != nil {
-			panic(fmt.Sprintf("couldn't convert number %s", n))
-		}
-		numbers = append(numbers, number)
-	}
-
-	return numbers
 }
 
 func numberArrToMap(numberArr []int) map[int]bool {

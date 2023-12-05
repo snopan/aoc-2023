@@ -3,6 +3,7 @@ package day4
 import (
 	"testing"
 
+	"github.com/snopan/aoc-2023/src/helpers"
 	"gotest.tools/assert"
 )
 
@@ -34,7 +35,7 @@ func Test_SolutionPart2(t *testing.T) {
 
 func Test_parseCardNumbers(t *testing.T) {
 	input := "1 2 3 4"
-	output := parseCardNumbers(input)
+	output := helpers.GetNumbersFromText(input)
 	assert.Equal(t, output[0], 1)
 	assert.Equal(t, output[1], 2)
 	assert.Equal(t, output[2], 3)

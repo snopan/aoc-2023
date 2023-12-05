@@ -9,6 +9,8 @@ import (
 	"github.com/snopan/aoc-2023/src/day2"
 	"github.com/snopan/aoc-2023/src/day3"
 	"github.com/snopan/aoc-2023/src/day4"
+	"github.com/snopan/aoc-2023/src/day5"
+	"github.com/snopan/aoc-2023/src/helpers"
 )
 
 func main() {
@@ -20,6 +22,7 @@ func main() {
 	}
 
 	input := string(inputBytes)
+	input = helpers.PrepareInput(input)
 	var solution any
 	switch day {
 	case "1":
@@ -49,6 +52,13 @@ func main() {
 			solution = day4.SolutionPart1(input)
 		case "2":
 			solution = day4.SolutionPart2(input)
+		}
+	case "5":
+		switch part {
+		case "1":
+			solution = day5.SolutionPart1(input)
+		case "2":
+			solution = day5.SolutionPart2(input)
 		}
 	}
 
