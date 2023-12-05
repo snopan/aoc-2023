@@ -9,10 +9,10 @@ import (
 func SolutionPart1(input string) int {
 	lines := strings.Split(input, "\n")
 
-	actualBag := parseBag(lines[0])
+	actualBag := parseBag("12 red, 13 green, 14 blue")
 
 	total := 0
-	for _, game := range lines[1:] {
+	for _, game := range lines {
 		if len(game) == 0 {
 			continue
 		}
