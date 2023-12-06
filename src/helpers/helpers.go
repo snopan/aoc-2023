@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,6 +22,26 @@ func GetNumbersFromText(text string) []int {
 	}
 
 	return numbers
+}
+
+func CombineIntArrToInt(numbers []int) int {
+	res := 0
+	op := 1
+	for i := len(numbers) - 1; i >= 0; i-- {
+		digits := numbers[i]
+		res += numbers[i] * op
+		op *= int(math.Pow(10, float64(DigitLen(digits))))
+	}
+	return res
+}
+
+func DigitLen(n int) int {
+	count := 0
+	for n > 0 {
+		n = n / 10
+		count++
+	}
+	return count
 }
 
 func PrepareInput(input string) string {
