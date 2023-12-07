@@ -63,7 +63,7 @@ func SolutionPart2(input string) int {
 
 		if numMatches > 0 {
 			currLen := len(cardCopies)
-			for i := 0; i < min(numMatches, currLen); i++ {
+			for i := 0; i < helpers.Min(numMatches, currLen); i++ {
 				cardCopies[i] += currCopies
 			}
 			if numMatches > currLen {
@@ -102,12 +102,4 @@ func numberArrToMap(numberArr []int) map[int]bool {
 		numberMap[n] = true
 	}
 	return numberMap
-}
-
-func min(a int, b int) int {
-	if a < b {
-		return a
-	} else {
-		return b
-	}
 }

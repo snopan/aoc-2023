@@ -50,3 +50,11 @@ func PrepareInput(input string) string {
 	input = strings.TrimSpace(input)
 	return input
 }
+
+func Min(a int, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
