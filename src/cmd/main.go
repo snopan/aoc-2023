@@ -12,6 +12,7 @@ import (
 	"github.com/snopan/aoc-2023/src/day5"
 	"github.com/snopan/aoc-2023/src/day6"
 	"github.com/snopan/aoc-2023/src/day7"
+	"github.com/snopan/aoc-2023/src/day8"
 	"github.com/snopan/aoc-2023/src/helpers"
 )
 
@@ -75,6 +76,13 @@ func main() {
 			solution = day7.SolutionPart1(input)
 		case "2":
 			solution = day7.SolutionPart2(input)
+		}
+	case "8":
+		switch part {
+		case "1":
+			solution = day8.SolutionPart1(input)
+		case "2":
+			solution = day8.SolutionPart2(input)
 		}
 	}
 
