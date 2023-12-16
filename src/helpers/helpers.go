@@ -9,7 +9,7 @@ import (
 )
 
 func GetNumbersFromText(text string) []int {
-	re := regexp.MustCompile(`\d+`)
+	re := regexp.MustCompile(`-?\d+`)
 	numberTexts := re.FindAllStringSubmatch(text, -1)
 
 	numbers := []int{}
