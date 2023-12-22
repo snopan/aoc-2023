@@ -58,3 +58,12 @@ func Min(a int, b int) int {
 		return b
 	}
 }
+
+func Contains[K comparable](s []K, e K) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
