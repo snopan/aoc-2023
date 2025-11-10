@@ -11,12 +11,12 @@ import (
 func SolutionPart1(input string) int {
 	lines := strings.Split(input, "\n")
 
-	tileMap := map[string]Tile{}
-	startCoordinate := ""
+	tileMap := map[helpers.Coordinate]Tile{}
+	var startCoordinate helpers.Coordinate
 	for y, line := range lines {
 		for x, t := range line {
 			tile := ToTile(t)
-			coordinate := Coordinate(x, y)
+			coordinate := helpers.NewCoordinate(x, y)
 			tileMap[coordinate] = tile
 			if tile == Start {
 				startCoordinate = coordinate
@@ -24,13 +24,13 @@ func SolutionPart1(input string) int {
 		}
 	}
 
-	travelledCoords := []string{}
-	toProcessCoords := map[string][]string{
+	travelledCoords := []helpers.Coordinate{}
+	toProcessCoords := map[helpers.Coordinate][]helpers.Coordinate{
 		startCoordinate: Start.ConnectedCoordinates(startCoordinate),
 	}
 	steps := 0
 	for {
-		newToProcessCoords := map[string][]string{}
+		newToProcessCoords := map[helpers.Coordinate][]helpers.Coordinate{}
 
 		if len(maps.Keys(toProcessCoords)) == 0 {
 			panic("no procesing left")
@@ -50,7 +50,7 @@ func SolutionPart1(input string) int {
 				nextTileConnectedCoords := nextTile.ConnectedCoordinates(connectedCoord)
 
 				isConnected := false
-				newCoords := []string{}
+				newCoords := []helpers.Coordinate{}
 				for _, ntcc := range nextTileConnectedCoords {
 					if ntcc == coord {
 						isConnected = true
@@ -73,12 +73,12 @@ func SolutionPart1(input string) int {
 func SolutionPart2(input string) int {
 	lines := strings.Split(input, "\n")
 
-	tileMap := map[string]Tile{}
-	startCoordinate := ""
+	tileMap := map[helpers.Coordinate]Tile{}
+	var startCoordinate helpers.Coordinate
 	for y, line := range lines {
 		for x, t := range line {
 			tile := ToTile(t)
-			coordinate := Coordinate(x, y)
+			coordinate := helpers.NewCoordinate(x, y)
 			tileMap[coordinate] = tile
 			if tile == Start {
 				startCoordinate = coordinate
@@ -86,13 +86,13 @@ func SolutionPart2(input string) int {
 		}
 	}
 
-	travelledCoords := []string{}
-	toProcessCoords := map[string][]string{
+	travelledCoords := []helpers.Coordinate{}
+	toProcessCoords := map[helpers.Coordinate][]helpers.Coordinate{
 		startCoordinate: Start.ConnectedCoordinates(startCoordinate),
 	}
 	done := false
 	for !done {
-		newToProcessCoords := map[string][]string{}
+		newToProcessCoords := map[helpers.Coordinate][]helpers.Coordinate{}
 
 		if len(maps.Keys(toProcessCoords)) == 0 {
 			panic("no procesing left")
@@ -113,7 +113,7 @@ func SolutionPart2(input string) int {
 				nextTileConnectedCoords := nextTile.ConnectedCoordinates(connectedCoord)
 
 				isConnected := false
-				newCoords := []string{}
+				newCoords := []helpers.Coordinate{}
 				for _, ntcc := range nextTileConnectedCoords {
 					if ntcc == coord {
 						isConnected = true
@@ -136,7 +136,7 @@ func SolutionPart2(input string) int {
 	w := len(lines[0])
 	for y, line := range lines {
 		for x := range line {
-			if helpers.Contains(travelledCoords, Coordinate(x, y)) {
+			if helpers.Contains(travelledCoords, helpers.NewCoordinate(x, y)) {
 				continue
 			}
 
@@ -144,7 +144,7 @@ func SolutionPart2(input string) int {
 			x2, y2 := x, y
 
 			for x2 < w && y2 < h {
-				coordinate := Coordinate(x2, y2)
+				coordinate := helpers.NewCoordinate(x2, y2)
 				tile := tileMap[coordinate]
 				if helpers.Contains(travelledCoords, coordinate) && tile != NorthEast && tile != SouthWest {
 					crosses++
