@@ -106,7 +106,7 @@ func main() {
 		case "1":
 			solution = day11.SolutionPart1(input)
 		case "2":
-			solution = day10.SolutionPart2(input)
+			solution = day11.SolutionPart2(input)
 		}
 	}
 

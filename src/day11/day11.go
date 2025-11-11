@@ -7,6 +7,14 @@ import (
 )
 
 func SolutionPart1(input string) int {
+	return commonSolution(input, 2)
+}
+
+func SolutionPart2(input string) int {
+	return commonSolution(input, 1000000)
+}
+
+func commonSolution(input string, emptySpaceDistance int) int {
 	lines := strings.Split(input, "\n")
 
 	galaxies := []helpers.Coordinate{}
@@ -36,16 +44,16 @@ func SolutionPart1(input string) int {
 
 		verticalDistance := 0
 		if galaxyA.Y < galaxyB.Y {
-			verticalDistance += calculateAxisDistance(galaxyA.Y, galaxyB.Y, rowsHasGalaexies)
+			verticalDistance += calculateAxisDistance(galaxyA.Y, galaxyB.Y, rowsHasGalaexies, emptySpaceDistance)
 		} else if galaxyA.Y > galaxyB.Y {
-			verticalDistance += calculateAxisDistance(galaxyB.Y, galaxyA.Y, rowsHasGalaexies)
+			verticalDistance += calculateAxisDistance(galaxyB.Y, galaxyA.Y, rowsHasGalaexies, emptySpaceDistance)
 		}
 
 		horizontalDistance := 0
 		if galaxyA.X < galaxyB.X {
-			horizontalDistance += calculateAxisDistance(galaxyA.X, galaxyB.X, columnHasGalaxies)
+			horizontalDistance += calculateAxisDistance(galaxyA.X, galaxyB.X, columnHasGalaxies, emptySpaceDistance)
 		} else if galaxyA.X > galaxyB.X {
-			horizontalDistance += calculateAxisDistance(galaxyB.X, galaxyA.X, columnHasGalaxies)
+			horizontalDistance += calculateAxisDistance(galaxyB.X, galaxyA.X, columnHasGalaxies, emptySpaceDistance)
 		}
 		distanceSum += verticalDistance + horizontalDistance
 	}
@@ -53,11 +61,11 @@ func SolutionPart1(input string) int {
 	return distanceSum
 }
 
-func calculateAxisDistance(start int, end int, hasGalaxyOnAxis map[int]bool) int {
+func calculateAxisDistance(start int, end int, hasGalaxyOnAxis map[int]bool, emptySpaceDistance int) int {
 	distance := 0
 	for i := start + 1; i <= end; i++ {
 		if !hasGalaxyOnAxis[i] {
-			distance += 2
+			distance += emptySpaceDistance
 		} else {
 			distance++
 		}
