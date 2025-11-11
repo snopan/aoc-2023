@@ -7,6 +7,7 @@ import (
 
 	"github.com/snopan/aoc-2023/src/day1"
 	"github.com/snopan/aoc-2023/src/day10"
+	"github.com/snopan/aoc-2023/src/day11"
 	"github.com/snopan/aoc-2023/src/day2"
 	"github.com/snopan/aoc-2023/src/day3"
 	"github.com/snopan/aoc-2023/src/day4"
@@ -100,7 +101,14 @@ func main() {
 		case "2":
 			solution = day10.SolutionPart2(input)
 		}
+	case "11":
+		switch part {
+		case "1":
+			solution = day11.SolutionPart1(input)
+		case "2":
+			solution = day10.SolutionPart2(input)
+		}
 	}
 
-	fmt.Printf("Solution is: %+v", solution)
+	fmt.Printf("Solution is: %+v\n", solution)
 }
