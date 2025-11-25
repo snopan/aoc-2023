@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/snopan/aoc-2023/src/day1"
 	"github.com/snopan/aoc-2023/src/day10"
@@ -21,6 +22,7 @@ import (
 )
 
 func main() {
+	start := time.Now()
 	day := os.Args[1]
 	part := os.Args[2]
 	inputBytes, err := io.ReadAll(os.Stdin)
@@ -119,4 +121,5 @@ func main() {
 	}
 
 	fmt.Printf("Solution is: %+v\n", solution)
+	fmt.Printf("Time took: %s\n", time.Since(start))
 }
