@@ -3,9 +3,10 @@ package day12
 import (
 	"strconv"
 	"strings"
+	"sync"
 )
 
-type ProcesStatus struct {
+type procesStatus struct {
 	processedSprings                string
 	unprocessedSprings              string
 	currDamagedSpringsConnected     int
@@ -28,36 +29,75 @@ func SolutionPart1(input string) int {
 			expectedDamagedSpringsConnected = append(expectedDamagedSpringsConnected, connectedSprings)
 		}
 
-		springsCombinations := getSpringsCombinations(ProcesStatus{
-			processedSprings:                "",
-			unprocessedSprings:              unprocessedSprings,
-			currDamagedSpringsConnected:     0,
-			expectedDamagedSpringsConnected: expectedDamagedSpringsConnected,
-		})
+		workers := 10
+		processes := []procesStatus{
+			{
+				processedSprings:                "",
+				unprocessedSprings:              unprocessedSprings,
+				currDamagedSpringsConnected:     0,
+				expectedDamagedSpringsConnected: expectedDamagedSpringsConnected,
+			},
+		}
+		var combinations []string
+		var inflight int
+		var poolLock sync.Mutex
 
-		sum += len(springsCombinations)
+		var wg sync.WaitGroup
+		for w := 0; w < workers; w++ {
+			wg.Add(1)
+			go func(w int) {
+				defer wg.Done()
+				for {
+					poolLock.Lock()
+					if len(processes) == 0 {
+						poolLock.Unlock()
+						if inflight == 0 {
+							return
+						}
+						continue
+					}
+
+					p := processes[0]
+					processes = processes[1:]
+					inflight++
+					poolLock.Unlock()
+
+					newProcesses, newCombinations := getSpringsCombinations(p)
+
+					poolLock.Lock()
+					processes = append(processes, newProcesses...)
+					combinations = append(combinations, newCombinations...)
+					inflight--
+					poolLock.Unlock()
+				}
+			}(w)
+		}
+
+		wg.Wait()
+
+		sum += len(combinations)
 	}
 	return sum
 }
 
-func getSpringsCombinations(status ProcesStatus) []string {
+func getSpringsCombinations(status procesStatus) ([]procesStatus, []string) {
 	if len(status.unprocessedSprings) == 0 {
 		if status.currDamagedSpringsConnected > 0 {
 			// If theres connected damaged springs then we should find that exact
 			// amount of connected springs from other report (expectedConnectedSprings)
 			if len(status.expectedDamagedSpringsConnected) != 1 ||
 				status.currDamagedSpringsConnected != status.expectedDamagedSpringsConnected[0] {
-				return []string{}
+				return []procesStatus{}, []string{}
 			}
-			return []string{status.processedSprings}
+			return []procesStatus{}, []string{status.processedSprings}
 		}
 
 		// If theres no connected damaged springs and because it's at the end
 		// there should be no expected connected damaged springs left
 		if len(status.expectedDamagedSpringsConnected) > 0 {
-			return []string{}
+			return []procesStatus{}, []string{}
 		}
-		return []string{status.processedSprings}
+		return []procesStatus{}, []string{status.processedSprings}
 	}
 
 	currentSpring := status.unprocessedSprings[0]
@@ -68,7 +108,7 @@ func getSpringsCombinations(status ProcesStatus) []string {
 			// amount of connected springs from other report (expectedConnectedSprings)
 			if len(status.expectedDamagedSpringsConnected) == 0 ||
 				status.currDamagedSpringsConnected != status.expectedDamagedSpringsConnected[0] {
-				return []string{}
+				return []procesStatus{}, []string{}
 			}
 
 			// Mark the group of damaged springs connected as processed
@@ -79,19 +119,26 @@ func getSpringsCombinations(status ProcesStatus) []string {
 
 		// Reset the counter for damaged springs connected
 		status.currDamagedSpringsConnected = 0
-		return getSpringsCombinations(status)
+		return []procesStatus{status}, []string{}
 	case '#':
 		status.processedSprings += "#"
 		status.unprocessedSprings = status.unprocessedSprings[1:]
 		status.currDamagedSpringsConnected++
-		return getSpringsCombinations(status)
+		return []procesStatus{status}, []string{}
 	case '?':
-		var springsCombinations []string
-		status.unprocessedSprings = "#" + status.unprocessedSprings[1:]
-		springsCombinations = append(springsCombinations, getSpringsCombinations(status)...)
-		status.unprocessedSprings = "." + status.unprocessedSprings[1:]
-		springsCombinations = append(springsCombinations, getSpringsCombinations(status)...)
-		return springsCombinations
+		damagedSpringStatus := procesStatus{
+			processedSprings:                status.processedSprings,
+			unprocessedSprings:              "#" + status.unprocessedSprings[1:],
+			currDamagedSpringsConnected:     status.currDamagedSpringsConnected,
+			expectedDamagedSpringsConnected: status.expectedDamagedSpringsConnected,
+		}
+		workingSpringStatus := procesStatus{
+			processedSprings:                status.processedSprings,
+			unprocessedSprings:              "." + status.unprocessedSprings[1:],
+			currDamagedSpringsConnected:     status.currDamagedSpringsConnected,
+			expectedDamagedSpringsConnected: status.expectedDamagedSpringsConnected,
+		}
+		return []procesStatus{damagedSpringStatus, workingSpringStatus}, []string{}
 	default:
 		panic("unknown spring value")
 	}
